@@ -41,7 +41,7 @@ def show_result(input,output):
     ax1.axis('off')
     ax2.imshow(output)
     ax2.set_title("Synthesis_result")
-    plt.show
+    plt.show()
     
 
 
@@ -54,7 +54,7 @@ def synthesis(args):
         new_h, new_w = int(args.scale * img_size[0]), int(args.scale * img_size[1])
         # print(img.shape)
         new_img = textureSynthesis.Construct(img, [args.block_size, args.block_size], args.overlap, new_h, new_w, args.tolerance)
-        show_result(img,new_img)
+        #show_result(img,new_img)
         # Save generated image if required
         img_name = args.img_path.split("/")[-1].split(".")[0]
         img_to_save = Image.fromarray(new_img.astype('uint8'), 'RGB')

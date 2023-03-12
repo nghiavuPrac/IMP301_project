@@ -1,0 +1,3 @@
+results/synthesis/*
+texture_Synthesis/__pycache__
+.ipy*
