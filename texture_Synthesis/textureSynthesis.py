@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-from minimumCostPathFunc import minimumCostMask 
+from texture_Synthesis.minimumCostPathFunc import minimumCostMask 
 
 def Construct(imgArray, blockSize, overlapSize, outSizeX, outSizeY, tolerance):
     imgArray = np.array(imgArray)
