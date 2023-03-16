@@ -6,6 +6,7 @@ from PIL import ImageTk, Image
 import cv2
 from texture_Synthesis.main import texture_handler
 import time
+import numpy as np
 
 
 class GUI_texture_synthesis():
@@ -110,6 +111,10 @@ class GUI_texture_synthesis():
 
         self.input_image = Image.open(self.input_image_path)
         img = self.input_image.copy()
+
+        #conver image to numpy array
+        self.img_np = np.array(self.input_image.convert('RGB'))
+
         img.thumbnail((322, 300))
         image_tk = ImageTk.PhotoImage(img)
         self.image_window = Frame(self.input1_frame)
@@ -120,13 +125,22 @@ class GUI_texture_synthesis():
         label.configure(image=image_tk)
         label.pack()
 
+    # lay blocksize = shape image -10 de chay cho le
+    def cheating(self):
+        blocksize = self.img_np.shape[0]- 10
+        overlap = blocksize // 3
+        return blocksize, overlap
+
     def process(self):
+        default = True
         try:
             self.blocksize = int(self.txt1.get())
+            default = False
         except:
             pass
         try:
             self.overlap = int(self.txt2.get())
+            default = False
         except:
             pass
         try:
@@ -137,7 +151,11 @@ class GUI_texture_synthesis():
             self.tolerance = float(self.txt4.get())
         except:
             pass
-        handle = texture_handler(self.input_image_path, self.blocksize,
+
+        if default:
+            self.blocksize, self.overlap = self.cheating()
+
+        handle = texture_handler(self.img_np, self.blocksize,
                                  self.overlap, self.scale, self.tolerance)
         start = time.time()
         self.out_image = handle.synthesis()

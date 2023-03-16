@@ -2,3 +2,5 @@ results/synthesis/*
 texture_Synthesis/__pycache__
 *.ipynb
 texture_Synthesis_Cupy
+outputs/*
+__pycache__

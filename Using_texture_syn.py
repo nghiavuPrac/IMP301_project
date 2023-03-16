@@ -8,13 +8,14 @@ import texture_Synthesis_Cupy.main as torch_main
 
 
 
-img = "Inputs/Texture/t4.jpg"
+img = "Inputs/Texture/t8.png"
 blocksize = 50
 overlapsize = 5
 scale = 2
 tolerance = 0.1
 
 input  = cv2.imread(img)
+print(input.shape)
 
 # img_name = img.split("/")[-1].split(".")[0]
 # input = cv2.imread(img)
@@ -44,22 +45,19 @@ def np_process():
     handle = np_main.texture_handler(img,blocksize,overlapsize,scale,tolerance)
     output = handle.synthesis()
     end = time.time()
-    handle.save_img()
+    #handle.save_img()
     print(f'numpy finished in {round(end-start, 2)} second(s)')
 
-    plt.rcParams["figure.figsize"] = [7.50, 3.50]
     #plt.rcParams["figure.autolayout"] = True
     fig,ax = plt.subplots(1,2)
     #ax[0].axis('off')
     ax[0].imshow(input)
     ax[0].set_title("original")
-    ax[0].set_xlim(output.shape[0])
-    ax[0].set_xlim(output.shape[1])
+
     #ax[1].axis('off')
     ax[1].imshow(output)
     ax[1].set_title("Synthesis_result")
-    ax[1].set_xlim(output.shape[0])
-    ax[1].set_xlim(output.shape[1])
+
     plt.show()
 
 process1 = multiprocessing.Process(target= np_process)
