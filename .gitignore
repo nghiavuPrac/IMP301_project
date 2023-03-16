@@ -1,3 +1,4 @@
 results/synthesis/*
 texture_Synthesis/__pycache__
-.ipy*
+*.ipynb
+texture_Synthesis_Cupy
