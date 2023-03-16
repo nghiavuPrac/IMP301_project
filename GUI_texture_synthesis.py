@@ -10,8 +10,8 @@ import time
 
 class GUI_texture_synthesis():
     txt1, txt2, txt3, txt4 = None, None, None, None
-    blocksize = 10
-    overlap = 2
+    blocksize = 50
+    overlap = 10
     scale = 2
     tolerance = 0.1
     input_image_path = None
