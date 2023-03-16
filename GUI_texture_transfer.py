@@ -97,11 +97,17 @@ class GUI_texture_transfer:
         text2.place(x=340+114*4, y=320, width=114, height=40)
 
         # text boxs
-        self.txt0 = Entry(self.master, font=self.font_style)
+        text = StringVar()
+        text.set(f"{self.k}")
+        self.txt0 = Entry(self.master, font=self.font_style, textvariable=text)
         self.txt0.place(x=340+114*1, y=320, width=114, height=40)
-        self.txt1 = Entry(self.master, font=self.font_style)
+        text = StringVar()
+        text.set(f"{self.alpha}")
+        self.txt1 = Entry(self.master, font=self.font_style, textvariable=text)
         self.txt1.place(x=340+114*3, y=320, width=114, height=40)
-        self.txt2 = Entry(self.master, font=self.font_style)
+        text = StringVar()
+        text.set(f"{self.beta}")
+        self.txt2 = Entry(self.master, font=self.font_style, textvariable=text)
         self.txt2.place(x=340+114*5, y=320, width=114, height=40)
 
     def open_file_1(self):
@@ -176,10 +182,10 @@ class GUI_texture_transfer:
         self.image_container.bind("<Configure>", lambda e: self.canvas.configure(
             scrollregion=self.canvas.bbox("all")))
         self.canvas.create_window(
-            (0, 0), window=self.image_container, anchor="nw")
+            (0, 0), window=self.image_container, anchor="center", height=300)
         for img in self.list_output_image:
             img.thumbnail((300, 300))
             photo = ImageTk.PhotoImage(img)
-            label = Label(self.image_container, image=photo)
+            label = Label(self.image_container, image=photo, height= 300, width=300)
             label.image = photo
             label.pack(side="left")

@@ -96,13 +96,21 @@ class GUI_texture_synthesis():
         text4.place(x=18, y=280, width=130, height=40)
 
         # text boxs
-        self.txt1 = Entry(self.input2_frame, font=self.font_style)
+        self.text1 = StringVar()
+        self.text1.set(f"{self.blocksize}")
+        self.txt1 = Entry(self.input2_frame, font=self.font_style, textvariable=self.text1)
         self.txt1.place(x=148, y=40, width=170, height=40)
-        self.txt2 = Entry(self.input2_frame, font=self.font_style)
+        self.text2 = StringVar()
+        self.text2.set(f"{self.overlap}")
+        self.txt2 = Entry(self.input2_frame, font=self.font_style, textvariable=self.text2)
         self.txt2.place(x=148, y=120, width=170, height=40)
-        self.txt3 = Entry(self.input2_frame, font=self.font_style)
+        text = StringVar()
+        text.set(f"{self.scale}")
+        self.txt3 = Entry(self.input2_frame, font=self.font_style, textvariable=text)
         self.txt3.place(x=148, y=200, width=170, height=40)
-        self.txt4 = Entry(self.input2_frame, font=self.font_style)
+        text = StringVar()
+        text.set(f"{self.tolerance}")
+        self.txt4 = Entry(self.input2_frame, font=self.font_style, textvariable=text)
         self.txt4.place(x=148, y=280, width=170, height=40)
 
     def open_file(self):
@@ -114,6 +122,10 @@ class GUI_texture_synthesis():
 
         #conver image to numpy array
         self.img_np = np.array(self.input_image.convert('RGB'))
+
+        self.blocksize, self.overlap = self.cheating()
+        self.text1.set(f"{self.blocksize}")
+        self.text2.set(f"{self.overlap}")
 
         img.thumbnail((322, 300))
         image_tk = ImageTk.PhotoImage(img)
@@ -187,8 +199,8 @@ class GUI_texture_synthesis():
         self.canvas.create_window(
             (0, 0), window=self.image_container, anchor="center", height=300)
         for img in self.list_output_image:
-            img.thumbnail((300, 300))
+            img.thumbnail((500, 300))
             photo = ImageTk.PhotoImage(img)
-            label = Label(self.image_container, image=photo, height= 300, width=300)
+            label = Label(self.image_container, image=photo, height= 300, width=500)
             label.image = photo
             label.pack(side="left")
