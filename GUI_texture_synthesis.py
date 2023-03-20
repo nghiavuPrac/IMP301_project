@@ -6,12 +6,13 @@ from PIL import ImageTk, Image
 import cv2
 from texture_Synthesis.main import texture_handler
 import time
+import numpy as np
 
 
 class GUI_texture_synthesis():
     txt1, txt2, txt3, txt4 = None, None, None, None
-    blocksize = 10
-    overlap = 2
+    blocksize = 50
+    overlap = 10
     scale = 2
     tolerance = 0.1
     input_image_path = None
@@ -95,13 +96,13 @@ class GUI_texture_synthesis():
         text4.place(x=18, y=280, width=130, height=40)
 
         # text boxs
-        text = StringVar()
-        text.set(f"{self.blocksize}")
-        self.txt1 = Entry(self.input2_frame, font=self.font_style, textvariable=text)
+        self.text1 = StringVar()
+        self.text1.set(f"{self.blocksize}")
+        self.txt1 = Entry(self.input2_frame, font=self.font_style, textvariable=self.text1)
         self.txt1.place(x=148, y=40, width=170, height=40)
-        text = StringVar()
-        text.set(f"{self.overlap}")
-        self.txt2 = Entry(self.input2_frame, font=self.font_style, textvariable=text)
+        self.text2 = StringVar()
+        self.text2.set(f"{self.overlap}")
+        self.txt2 = Entry(self.input2_frame, font=self.font_style, textvariable=self.text2)
         self.txt2.place(x=148, y=120, width=170, height=40)
         text = StringVar()
         text.set(f"{self.scale}")
@@ -118,6 +119,14 @@ class GUI_texture_synthesis():
 
         self.input_image = Image.open(self.input_image_path)
         img = self.input_image.copy()
+
+        #conver image to numpy array
+        self.img_np = np.array(self.input_image.convert('RGB'))
+
+        self.blocksize, self.overlap = self.cheating()
+        self.text1.set(f"{self.blocksize}")
+        self.text2.set(f"{self.overlap}")
+
         img.thumbnail((322, 300))
         image_tk = ImageTk.PhotoImage(img)
         self.image_window = Frame(self.input1_frame)
@@ -128,13 +137,22 @@ class GUI_texture_synthesis():
         label.configure(image=image_tk)
         label.pack()
 
+    # lay blocksize = shape image -10 de chay cho le
+    def cheating(self):
+        blocksize = self.img_np.shape[0]- 10
+        overlap = blocksize // 3
+        return blocksize, overlap
+
     def process(self):
+        default = True
         try:
             self.blocksize = int(self.txt1.get())
+            default = False
         except:
             pass
         try:
             self.overlap = int(self.txt2.get())
+            default = False
         except:
             pass
         try:
@@ -145,7 +163,11 @@ class GUI_texture_synthesis():
             self.tolerance = float(self.txt4.get())
         except:
             pass
-        handle = texture_handler(self.input_image_path, self.blocksize,
+
+        if default:
+            self.blocksize, self.overlap = self.cheating()
+
+        handle = texture_handler(self.img_np, self.blocksize,
                                  self.overlap, self.scale, self.tolerance)
         start = time.time()
         self.out_image = handle.synthesis()

@@ -8,23 +8,27 @@ import sys
 
 
 class texture_handler():
-    def __init__(self,img_path, block_size, overlap, scale, tolerance):
-        self.img_path = img_path
+    def __init__(self,img, block_size, overlap, scale, tolerance):
+        self.img = img
         self.block_size = block_size
         self.overlap = overlap
+
+        # self.block_size = self.img.shape[0]-10
+        # self.overlap = self.block_size // 3
+
         self.scale = scale
         self.tolerance = tolerance
 
 
-    def LoadImage(self,infilename) :
-        img = Image.open(infilename).convert('RGB')
-        data = np.asarray(img)
-        return data
+    # def LoadImage(self,infilename) :
+    #     img = Image.open(infilename).convert('RGB')
+    #     data = np.asarray(img)
+    #     return data
 
-    def getMask(img_path, threshold):
-        img_bw = Image.open(img_path).convert('LA').split()[0]
-        mask = np.asarray(img_bw) > threshold
-        return np.stack((mask, mask, mask), axis = 2)
+    # def getMask(img_path, threshold):
+    #     img_bw = Image.open(img_path).convert('LA').split()[0]
+    #     mask = np.asarray(img_bw) > threshold
+    #     return np.stack((mask, mask, mask), axis = 2)
     
     def show_result(input,output):
         fig = plt.figure(figsize=(16, 9))
@@ -36,27 +40,23 @@ class texture_handler():
         ax2.set_title("Synthesis_result")
         plt.show()
 
-    def save_img(self):
-        try:
-            img_name = self.img_path.split("/")[-1].split(".")[0]
-            img_to_save = Image.fromarray(self.new_img.astype('uint8'), 'RGB')
-            img_to_save.save("results/synthesis/" + img_name + "_b=" + str(self.block_size) + "_o=" + str(self.overlap) + "_t=" + str(self.tolerance).replace(".", "_") + ".png")
-        except Exception as e:
-            print("Error: ", e)
-            sys.exit(1)
+    # def save_img(self):
+    #     try:
+    #         img_name = self.img_path.split("/")[-1].split(".")[0]
+    #         img_to_save = Image.fromarray(self.new_img.astype('uint8'), 'RGB')
+    #         img_to_save.save("results/synthesis/" + img_name + "_b=" + str(self.block_size) + "_o=" + str(self.overlap) + "_t=" + str(self.tolerance).replace(".", "_") + ".png")
+    #     except Exception as e:
+    #         print("Error: ", e)
+    #         sys.exit(1)
 
 
 
     def synthesis(self):
         try:
-            print(self.img_path)
-            img = self.LoadImage(self.img_path)
-            img_size = img.shape
-
             # Get the generated texture
-            new_h, new_w = int(self.scale * img_size[0]), int(self.scale * img_size[1])
+            new_h, new_w = int(self.scale * self.img.shape[0]), int(self.scale * self.img.shape[1])
             # print(img.shape)
-            self.new_img = textureSynthesis.Construct(img, [self.block_size, self.block_size], self.overlap, new_h, new_w, self.tolerance)
+            self.new_img = textureSynthesis.Construct(self.img, [self.block_size, self.block_size], self.overlap, new_h, new_w, self.tolerance)
             #show_result(img,new_img)
             # Save generated image if required
         except Exception as e:
